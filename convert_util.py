@@ -7,6 +7,7 @@
 @Author: paidaxing
 @Date: 2024/6/16 21:15
 """
+import random
 import xml.etree.ElementTree as ET
 
 
@@ -55,18 +56,22 @@ def xml2ass(xml_file: str, ass_file: str, pcs: int) -> None:
                     font = int(bullet.findall('font')[0].text)
                     color = bullet.findall('color')[0].text
                     opacity = int(bullet.findall('opacity')[0].text)
+                    opacity_hex_str = hex(int(opacity * 255 / 10))[2:].upper()
+                    if opacity_hex_str == 1:
+                        opacity_hex_str = '0' + opacity_hex_str
                     position = int(bullet.findall('position')[0].text)
-                    start_ass = convert_time(int(showTime))
-                    end_ass = convert_time(int(showTime) + 38)
+                    start_ass = convert_time(int(showTime) - 33)
+                    end_ass = convert_time(int(showTime) - 33 + len(content) * 42 * 12 / 1920 + 12)
                     f.write(
-                        "Dialogue: %s,%s,%s,RightMode1,,20,20,2,,{\move(%s,%s,%s,%s)\c&H%s}%s\n" % (
-                            str(10 - opacity),
+                        "Dialogue: 0,%s,%s,%s,,20,20,2,,{\move(%s,%s,%s,%s)\c&H%s%s}%s\n" % (
                             start_ass,
                             end_ass,
-                            str(1940 + font),
-                            str(position + 3 * font + 20),
-                            str(-20 - font),
-                            str(position + 3 * font + 20),
+                            ['RightMode1', 'TopMode1'][random.randint(0, 1)],
+                            str(1920 + len(content) * 14 * 1.5),
+                            str(position + 14),
+                            str(-len(content) * 14 * 1.5),
+                            str(position + 14),
+                            opacity_hex_str,
                             color,
                             content
                         ))
@@ -79,19 +84,23 @@ def xml2ass(xml_file: str, ass_file: str, pcs: int) -> None:
                 showTime = bullet.findall('showTime')[0].text
                 font = int(bullet.findall('font')[0].text)
                 color = bullet.findall('color')[0].text
-                opacity = bullet.findall('opacity')[0].text
+                opacity = int(bullet.findall('opacity')[0].text)
+                opacity_hex_str = hex(int(opacity * 255 / 10))[2:].upper()
+                if opacity_hex_str == 1:
+                    opacity_hex_str = '0' + opacity_hex_str
                 position = int(bullet.findall('position')[0].text)
-                start_ass = convert_time(int(showTime))
-                end_ass = convert_time(int(showTime) + 38)
+                start_ass = convert_time(int(showTime) - 33)
+                end_ass = convert_time(int(showTime) - 33 + len(content) * 42 * 12 / 1920 + 12)
                 f.write(
-                    "Dialogue: %s,%s,%s,RightMode1,,20,20,2,,{\move(%s,%s,%s,%s)\c&H%s}%s\n"%(
-                        str(10 - opacity),
+                    "Dialogue: 0,%s,%s,%s,,20,20,2,,{\move(%s,%s,%s,%s)\c&H%s%s}%s\n" % (
                         start_ass,
                         end_ass,
-                        str(1940 + font),
-                        str(position + 3 * font + 20),
-                        str(-20 - font),
-                        str(position + 3 * font + 20),
+                        ['RightMode1', 'TopMode1'][random.randint(0, 1)],
+                        str(1920 + len(content) * 14 * 1.5),
+                        str(position + 14),
+                        str(-len(content) * 14 * 1.5),
+                        str(position + 14),
+                        opacity_hex_str,
                         color,
                         content
                     ))
